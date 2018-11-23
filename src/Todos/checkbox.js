@@ -32,7 +32,7 @@ class MyCheckbox extends Component {
 MyCheckbox.propTypes = {
   classes: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
-  title: PropTypes.bool.isRequired
+  checked: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(MyCheckbox);
