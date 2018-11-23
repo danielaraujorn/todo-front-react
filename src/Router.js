@@ -1,13 +1,32 @@
-import React from "react";
-import { BrowserRouter, Route, Link } from "react-router-dom";
+import React, { Component, Fragment } from "react";
+import { BrowserRouter, Route } from "react-router-dom";
+import { getCookie } from "./utils";
 import Login from "./Auth/login";
-const About = () => <h2>About</h2>;
-const Users = () => <h2>Users</h2>;
-
-const Router = () => (
-  <BrowserRouter>
-    <div>
-      {/* <nav>
+import Todos from "./Todos/";
+import Menu from "./menu";
+export default class Router extends Component {
+  state = {
+    logged: !!getCookie("token")
+  };
+  changeLogged = logged => this.setState({ logged });
+  privateRoutes = [
+    <Menu key="menu" changeLogged={this.changeLogged} />,
+    <Route key="todosRoute" path="/" component={Todos} />
+  ];
+  publicRoutes = [
+    <Route
+      key="loginRoute"
+      path="/"
+      exact
+      render={() => <Login changeLogged={this.changeLogged} />}
+    />
+  ];
+  render() {
+    return (
+      <Fragment>
+        <BrowserRouter>
+          <div>
+            {/* <nav>
         <ul>
           <li>
             <Link to="/">Home</Link>
@@ -21,11 +40,10 @@ const Router = () => (
         </ul>
       </nav> */}
 
-      <Route path="/" exact component={Login} />
-      <Route path="/about/" component={About} />
-      <Route path="/users/" component={Users} />
-    </div>
-  </BrowserRouter>
-);
-
-export default Router;
+            {this.state.logged ? this.privateRoutes : this.publicRoutes}
+          </div>
+        </BrowserRouter>
+      </Fragment>
+    );
+  }
+}

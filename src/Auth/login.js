@@ -1,9 +1,40 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { request } from "../utils";
+import { request, saveTokenCookie } from "../utils";
 import { loginRoute } from "../config";
-export default class Login extends Component {
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = theme => ({
+  container: {
+    backgroundColor: theme.palette.primary.light,
+    display: "flex",
+    alignItems: "center",
+    height: "100vh",
+    justifyContent: "center",
+    width: "100vw"
+  },
+  formContainer: {
+    padding: 15,
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.common.white,
+    display: "flex",
+    flexFlow: "column",
+    maxWidth: 400,
+    minWidth: 290,
+    width: "25%"
+  },
+  form: {
+    display: "flex",
+    flexFlow: "column"
+  },
+  input: {
+    marginBottom: 5,
+    marginTop: 5
+  }
+});
+
+class Login extends Component {
   state = {
     email: "",
     password: ""
@@ -28,38 +59,50 @@ export default class Login extends Component {
     // })
     //   .then(res => res.json())
     //   .then(res => console.log(res));
-    request
-      .post(loginRoute, { email, password })
-      .then(response => console.log(response));
+    request.post(loginRoute, { email, password }).then(response => {
+      saveTokenCookie(response.data.id);
+      this.props.changeLogged(!!response.data.id);
+    });
   };
   render() {
+    const { classes } = this.props;
     return (
-      <Fragment>
-        <form onSubmit={this.submit}>
-          <TextField
-            label="Email"
-            placeholder="email@email.com"
-            value={this.state.email}
-            onChange={this.handleChange("email")}
-          />
-          <TextField
-            label="Senha"
-            placeholder="********"
-            value={this.state.password}
-            type="password"
-            onChange={this.handleChange("password")}
-          />
-          <input style={{ display: "none" }} type="submit" />
-        </form>
-        <Button
-          onClick={this.submit}
-          variant="contained"
-          color="primary"
-          type="submit"
-        >
-          Entrar
-        </Button>
-      </Fragment>
+      <div className={classes.container}>
+        <div className={classes.formContainer}>
+          <form onSubmit={this.submit} className={classes.form}>
+            <TextField
+              required={true}
+              autoFocus={true}
+              className={classes.input}
+              label="Email"
+              placeholder="email@email.com"
+              value={this.state.email}
+              onChange={this.handleChange("email")}
+            />
+            <TextField
+              required={true}
+              className={classes.input}
+              label="Senha"
+              placeholder="********"
+              value={this.state.password}
+              type="password"
+              onChange={this.handleChange("password")}
+            />
+            <input style={{ display: "none" }} type="submit" />
+          </form>
+          <Button
+            className={classes.input}
+            onClick={this.submit}
+            variant="contained"
+            color="primary"
+            type="submit"
+          >
+            Entrar
+          </Button>
+        </div>
+      </div>
     );
   }
 }
+
+export default withStyles(styles)(Login);
