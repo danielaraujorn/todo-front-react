@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import { getCookie } from "./utils";
 import Login from "./Auth/login";
@@ -23,7 +23,7 @@ export default class Router extends Component {
   ];
   render() {
     return (
-      <Fragment>
+      <>
         <BrowserRouter>
           <div>
             {/* <nav>
@@ -43,7 +43,7 @@ export default class Router extends Component {
             {this.state.logged ? this.privateRoutes : this.publicRoutes}
           </div>
         </BrowserRouter>
-      </Fragment>
+      </>
     );
   }
 }

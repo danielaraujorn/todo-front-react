@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import Todo from "./Todo";
 import { request } from "../utils";
-import { getMyTodosRoute } from "../config";
+import { getMyTodosRoute, checkboxRoute } from "../config";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import globalClasses from "./styles";
+import { todosContext } from "../contexts";
 // import Card from "@material-ui/core/Card";
 // import TextField from "@material-ui/core/TextField";
 // import CardContent from "@material-ui/core/CardContent";
@@ -23,14 +24,35 @@ class Todos extends Component {
       this.setState({ todos });
     });
   }
+  submitCheck = data => {
+    request.post(checkboxRoute, data).then(response => {
+      if (response.status === 200) {
+        const todosCopia = [...this.state.todos];
+        const index = todosCopia.findIndex(
+          ({ id }) => id === response.data.todoId
+        );
+        todosCopia[index].checkboxes !== undefined
+          ? todosCopia[index].checkboxes.push(response.data)
+          : (todosCopia[index].checkboxes = [response.data]);
+        this.setState({ todos: todosCopia });
+      }
+    });
+  };
   render() {
     // const { classes } = this.props;
+    const { todos } = this.state;
     return (
       <Grid container>
-        {this.state.todos.map(todo => (
-          <Grid key={todo.id} item xs={12}>
-            <Todo {...todo} />{" "}
-            {/* <Card className={classes.card}>
+        <todosContext.Provider
+          value={{
+            todos: todos,
+            submitCheck: this.submitCheck
+          }}
+        >
+          {todos.map(todo => (
+            <Grid key={todo.id} item xs={12}>
+              <Todo {...todo} />{" "}
+              {/* <Card className={classes.card}>
               <CardContent className={classes.cardContent}>
                 <TextField
                   className={classes.input}
@@ -53,8 +75,9 @@ class Todos extends Component {
                 />
               </CardContent>
             </Card> */}
-          </Grid>
-        ))}
+            </Grid>
+          ))}
+        </todosContext.Provider>
       </Grid>
     );
   }

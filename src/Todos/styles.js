@@ -10,26 +10,26 @@ export default theme => ({
   },
   checks: {
     display: "flex",
-    padding: 10
+    padding: 10,
+    flexDirection: "column"
   },
   expand: {
     transform: "rotate(0deg)",
     transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest
-    }),
-    marginLeft: "auto"
+    })
   },
   expandOpen: {
     transform: "rotate(180deg)"
   },
   todo: {
-    cursor: "pointer",
     paddingRight: 10,
     paddingLeft: 30,
     display: "flex",
     alignItems: "center"
   },
   todoTitle: {
+    cursor: "pointer",
     fontSize: 16,
     color: theme.palette.primary.dark
   },
@@ -37,11 +37,22 @@ export default theme => ({
     color: theme.palette.primary.dark
   },
   checkboxContainer: {
-    padding: 5,
-    margin: 0,
-    cursor: "pointer",
+    paddingLeft: 15,
+    paddingRight: 10,
+    marginBottom: 5,
+    display: "flex",
+    alignItems: "center",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: "#0000000a",
+    backgroundColor: "#0000000d"
+  },
+  todoButtons: {
+    marginLeft: "auto"
+  },
+  buttonSave: {
+    marginTop: 6,
+    marginBottom: 6
+  },
+  textField: {
     width: "100%"
   }
 });
