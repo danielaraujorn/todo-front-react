@@ -8,7 +8,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import { withStyles } from "@material-ui/core/styles";
-import MenuIcon from "@material-ui/icons/Menu";
+// import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { deleteTokenCookie } from "./utils";
@@ -37,7 +37,6 @@ const styles = theme => ({
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing.unit * 3,
       width: theme.spacing.unit * 60
     }
   },
@@ -97,7 +96,7 @@ class PrimarySearchAppBar extends React.Component {
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
-        <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
+        {/* <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem> */}
         <MenuItem onClick={this.loggout}>Sair</MenuItem>
       </Menu>
     );
@@ -106,13 +105,13 @@ class PrimarySearchAppBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar variant="dense" className={classes.toolbar}>
-            <IconButton
+            {/* <IconButton
               className={classes.menuButton}
               color="inherit"
               aria-label="Open drawer"
             >
               <MenuIcon />
-            </IconButton>
+            </IconButton> */}
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />

@@ -46,6 +46,7 @@ export default theme => ({
     backgroundColor: "#0000000d"
   },
   todoButtons: {
+    display: "flex",
     marginLeft: "auto"
   },
   buttonSave: {
@@ -53,6 +54,9 @@ export default theme => ({
     marginBottom: 6
   },
   textField: {
+    width: "100%"
+  },
+  form: {
     width: "100%"
   }
 });

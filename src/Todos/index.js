@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import Todo from "./Todo";
 import { request } from "../utils";
-import { getMyTodosRoute, checkboxRoute, updateCheck } from "../config";
+import {
+  getMyTodosRoute,
+  checkboxRoute,
+  updateCheck,
+  todosRoute
+} from "../config";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -59,6 +64,15 @@ class Todos extends Component {
       }
     });
   };
+  deleteTodo = id => {
+    request.delete(todosRoute + "/" + id).then(response => {
+      if (response.status === 200) {
+        this.setState({
+          todos: [...this.state.todos].filter(item => item.id !== id)
+        });
+      }
+    });
+  };
   render() {
     // const { classes } = this.props;
     const { todos } = this.state;
@@ -68,7 +82,8 @@ class Todos extends Component {
           value={{
             todos: todos,
             postCheck: this.postCheck,
-            putCheck: this.putCheck
+            putCheck: this.putCheck,
+            deleteTodo: this.deleteTodo
           }}
         >
           {todos.map(todo => (

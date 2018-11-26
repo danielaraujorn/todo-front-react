@@ -15,19 +15,21 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import TextField from "@material-ui/core/TextField";
-// import Grow from "@material-ui/core/Grow";
-// import Paper from "@material-ui/core/Paper";
-// import Popper from "@material-ui/core/Popper";
-// import DeleteIcon from "@material-ui/icons/Delete";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import SaveIcon from "@material-ui/icons/Save";
 import CancelIcon from "@material-ui/icons/Cancel";
 import AddCheckbox from "./addCheckbox";
+import { todosContext } from "../contexts";
 const styles = globalClasses;
 class Todo extends React.Component {
   state = {
     expanded: false,
     openConfig: null,
     editMode: false,
+    removeMode: false,
     title: this.props.title
   };
   handleExpandClick = () => {
@@ -48,20 +50,58 @@ class Todo extends React.Component {
   afterEdit = () => {
     this.setState({ editMode: false });
   };
+  closeRemoveMode = () => {
+    this.setState({ removeMode: false });
+  };
   render() {
     const { classes, id } = this.props;
-    const { openConfig, expanded, editMode, title } = this.state;
+    const { openConfig, expanded, editMode, title, removeMode } = this.state;
     return (
       <Card className={classes.card}>
+        <Dialog open={removeMode} onClose={this.closeRemoveMode}>
+          <DialogTitle id="alert-dialog-title">
+            Deseja realmente excluir?
+          </DialogTitle>
+          <DialogActions>
+            <Button
+              onClick={() =>
+                this.setState({ removeMode: false, title: this.props.title })
+              }
+              color="primary"
+            >
+              Cancelar
+            </Button>
+            <todosContext.Consumer>
+              {({ deleteTodo }) => (
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    deleteTodo(id);
+                    this.closeRemoveMode();
+                  }}
+                  color="primary"
+                  autoFocus
+                >
+                  Excluir
+                </Button>
+              )}
+            </todosContext.Consumer>
+          </DialogActions>
+        </Dialog>
         <CardContent className={classnames(classes.cardContent, classes.todo)}>
           {editMode ? (
             <>
-              <TextField
-                autoFocus={true}
-                className={classes.textField}
-                value={title}
-                onChange={this.handleChange("title")}
-              />
+              <form
+                className={classes.form}
+                onSubmit={() => console.log("alo")}
+              >
+                <TextField
+                  autoFocus={true}
+                  className={classes.textField}
+                  value={title}
+                  onChange={this.handleChange("title")}
+                />
+              </form>
               <div className={classes.todoButtons}>
                 <IconButton aria-label="cancelar" onClick={this.afterEdit}>
                   <CancelIcon />
@@ -126,7 +166,13 @@ class Todo extends React.Component {
               >
                 Editar
               </MenuItem>
-              <MenuItem onClick={this.handleCloseConfig}>Excluir</MenuItem>
+              <MenuItem
+                onClick={() =>
+                  this.setState({ removeMode: true, openConfig: false })
+                }
+              >
+                Excluir
+              </MenuItem>
             </Menu>
           </ClickAwayListener>
         </CardContent>
