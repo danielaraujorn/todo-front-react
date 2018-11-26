@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Todo from "./Todo";
 import { request } from "../utils";
-import { getMyTodosRoute, checkboxRoute } from "../config";
+import { getMyTodosRoute, checkboxRoute, updateCheck } from "../config";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -24,7 +24,7 @@ class Todos extends Component {
       this.setState({ todos });
     });
   }
-  submitCheck = data => {
+  postCheck = data => {
     request.post(checkboxRoute, data).then(response => {
       if (response.status === 200) {
         const todosCopia = [...this.state.todos];
@@ -38,6 +38,27 @@ class Todos extends Component {
       }
     });
   };
+  putCheck = data => {
+    request.put(updateCheck, data).then(response => {
+      if (response.status === 200) {
+        let todosCopia = [...this.state.todos];
+        const indexTodo = todosCopia.findIndex(
+          ({ id }) => id === response.data.checkbox.todoId
+        );
+        console.log(response, indexTodo);
+        const indexCheckbox =
+          indexTodo > 0 &&
+          todosCopia[indexTodo].checkboxes.findIndex(
+            ({ id }) => id === response.data.checkbox.id
+          );
+        todosCopia[indexTodo] !== undefined &&
+          todosCopia[indexTodo].checkboxes !== undefined &&
+          (todosCopia[indexTodo].checkboxes[indexCheckbox] =
+            response.data.checkbox);
+        this.setState({ todos: todosCopia });
+      }
+    });
+  };
   render() {
     // const { classes } = this.props;
     const { todos } = this.state;
@@ -46,7 +67,8 @@ class Todos extends Component {
         <todosContext.Provider
           value={{
             todos: todos,
-            submitCheck: this.submitCheck
+            postCheck: this.postCheck,
+            putCheck: this.putCheck
           }}
         >
           {todos.map(todo => (

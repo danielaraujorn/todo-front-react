@@ -24,14 +24,14 @@ class AddCheckbox extends Component {
     const { title, checked } = this.state;
     return (
       <todosContext.Consumer>
-        {({ submitCheck }) => (
+        {({ postCheck }) => (
           <form
             onSubmit={e => {
               e && e.preventDefault();
               if (title.length > 0) {
                 const data = { ...{ title, checked, todoId } };
                 this.setState({ title: "", checked: false });
-                submitCheck(data);
+                postCheck(data);
               }
             }}
           >
