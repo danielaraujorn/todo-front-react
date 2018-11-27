@@ -5,13 +5,15 @@ import {
   getMyTodosRoute,
   checkboxRoute,
   updateCheck,
-  todosRoute
+  todosRoute,
+  createTodo
 } from "../config";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import globalClasses from "./styles";
 import { todosContext } from "../contexts";
+import AddTodo from "./addTodo";
 // import Card from "@material-ui/core/Card";
 // import TextField from "@material-ui/core/TextField";
 // import CardContent from "@material-ui/core/CardContent";
@@ -29,6 +31,14 @@ class Todos extends Component {
       this.setState({ todos });
     });
   }
+  postTodo = data => {
+    request.post(createTodo, data).then(response => {
+      if (response.status === 200) {
+        const todos = [...this.state.todos, response.data.todo];
+        this.setState({ todos });
+      }
+    });
+  };
   postCheck = data => {
     request.post(checkboxRoute, data).then(response => {
       if (response.status === 200) {
@@ -83,7 +93,8 @@ class Todos extends Component {
             todos: todos,
             postCheck: this.postCheck,
             putCheck: this.putCheck,
-            deleteTodo: this.deleteTodo
+            deleteTodo: this.deleteTodo,
+            postTodo: this.postTodo
           }}
         >
           {todos.map(todo => (
@@ -114,6 +125,9 @@ class Todos extends Component {
             </Card> */}
             </Grid>
           ))}
+          <Grid item xs={12}>
+            <AddTodo />
+          </Grid>
         </todosContext.Provider>
       </Grid>
     );

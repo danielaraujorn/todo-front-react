@@ -14,6 +14,9 @@ export default theme => ({
     flexDirection: "column"
   },
   expand: {
+    [theme.breakpoints.down("md")]: {
+      display: "none"
+    },
     transform: "rotate(0deg)",
     transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest
@@ -24,7 +27,7 @@ export default theme => ({
   },
   todo: {
     paddingRight: 10,
-    paddingLeft: 30,
+    paddingLeft: 24,
     display: "flex",
     alignItems: "center"
   },
@@ -53,10 +56,14 @@ export default theme => ({
     marginTop: 6,
     marginBottom: 6
   },
-  textField: {
-    width: "100%"
-  },
   form: {
     width: "100%"
+  },
+  textfield: { margin: 0, width: "100%" },
+  paperAddTodo: {
+    // opacity: 0.4,
+    // "$&focus": {
+    //   opacity: 1
+    // }
   }
 });

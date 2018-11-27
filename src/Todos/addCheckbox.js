@@ -26,6 +26,7 @@ class AddCheckbox extends Component {
       <todosContext.Consumer>
         {({ postCheck }) => (
           <form
+            autoComplete={true}
             onSubmit={e => {
               e && e.preventDefault();
               if (title.length > 0) {
@@ -36,9 +37,10 @@ class AddCheckbox extends Component {
             }}
           >
             <TextField
+              name="todoTitle"
               id="outlined-name"
               label="Adicionar item"
-              className={classes.textField}
+              className={classes.textfield}
               margin="dense"
               value={title}
               onChange={this.handleChange("title")}
@@ -60,7 +62,11 @@ class AddCheckbox extends Component {
                         >
                           <IconButton
                             aria-label="adicionar"
-                            onClick={this.submit}
+                            onClick={() => {
+                              const data = { ...{ title, checked, todoId } };
+                              this.setState({ title: "", checked: false });
+                              postCheck(data);
+                            }}
                           >
                             <AddIcon fontSize="small" />
                           </IconButton>
