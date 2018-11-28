@@ -39,6 +39,23 @@ class Todos extends Component {
       }
     });
   };
+  putTodo = data => {
+    request.put(todosRoute, data).then(response => {
+      if (response.status === 200) {
+        let todosCopia = [...this.state.todos];
+        const indexTodo = todosCopia.findIndex(
+          ({ id }) => id === response.data.id
+        );
+        todosCopia[indexTodo] !== undefined &&
+          (todosCopia[indexTodo] = {
+            ...todosCopia[indexTodo],
+            ...response.data
+          });
+
+        this.setState({ todos: todosCopia });
+      }
+    });
+  };
   postCheck = data => {
     request.post(checkboxRoute, data).then(response => {
       if (response.status === 200) {
@@ -94,7 +111,8 @@ class Todos extends Component {
             postCheck: this.postCheck,
             putCheck: this.putCheck,
             deleteTodo: this.deleteTodo,
-            postTodo: this.postTodo
+            postTodo: this.postTodo,
+            putTodo: this.putTodo
           }}
         >
           {todos.map(todo => (

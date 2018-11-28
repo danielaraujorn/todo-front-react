@@ -54,7 +54,7 @@ class Todo extends React.Component {
     this.setState({ removeMode: false });
   };
   render() {
-    const { classes, id } = this.props;
+    const { classes, id, userId } = this.props;
     const { openConfig, expanded, editMode, title, removeMode } = this.state;
     return (
       <Card className={classes.card}>
@@ -90,31 +90,43 @@ class Todo extends React.Component {
         </Dialog>
         <CardContent className={classnames(classes.cardContent, classes.todo)}>
           {editMode ? (
-            <>
-              <form
-                className={classes.form}
-                onSubmit={() => console.log("alo")}
-              >
-                <TextField
-                  autoFocus={true}
-                  className={classes.textField}
-                  value={title}
-                  onChange={this.handleChange("title")}
-                />
-              </form>
-              <div className={classes.todoButtons}>
-                <IconButton aria-label="cancelar" onClick={this.afterEdit}>
-                  <CancelIcon />
-                </IconButton>
-                <IconButton
-                  color="primary"
-                  aria-label="salvar"
-                  onClick={this.afterEdit}
-                >
-                  <SaveIcon />
-                </IconButton>
-              </div>
-            </>
+            <todosContext.Consumer>
+              {({ putTodo }) => (
+                <>
+                  <form
+                    className={classes.form}
+                    onSubmit={e => {
+                      e.preventDefault();
+                      putTodo({ id, title, userId });
+                      this.afterEdit();
+                    }}
+                  >
+                    <TextField
+                      autoFocus={true}
+                      fullWidth
+                      className={classes.textField}
+                      value={title}
+                      onChange={this.handleChange("title")}
+                    />
+                  </form>
+                  <div className={classes.todoButtons}>
+                    <IconButton aria-label="cancelar" onClick={this.afterEdit}>
+                      <CancelIcon />
+                    </IconButton>
+                    <IconButton
+                      color="primary"
+                      aria-label="salvar"
+                      onClick={() => {
+                        putTodo({ id, title, userId });
+                        this.afterEdit();
+                      }}
+                    >
+                      <SaveIcon />
+                    </IconButton>
+                  </div>
+                </>
+              )}
+            </todosContext.Consumer>
           ) : (
             <>
               <Typography
@@ -191,7 +203,8 @@ class Todo extends React.Component {
 
 Todo.propTypes = {
   title: PropTypes.string.isRequired,
-  id: PropTypes.string,
+  id: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
   checkboxes: PropTypes.array
 };

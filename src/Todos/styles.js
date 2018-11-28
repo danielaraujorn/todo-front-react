@@ -14,7 +14,7 @@ export default theme => ({
     flexDirection: "column"
   },
   expand: {
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("xs")]: {
       display: "none"
     },
     transform: "rotate(0deg)",
@@ -34,6 +34,7 @@ export default theme => ({
   todoTitle: {
     cursor: "pointer",
     fontSize: 16,
+    width: "100%",
     color: theme.palette.primary.dark
   },
   todoIcon: {
@@ -62,7 +63,10 @@ export default theme => ({
   textfield: { margin: 0, width: "100%" },
   paperAddTodo: {
     // opacity: 0.4,
-    // "$&focus": {
+    // "&$cssFocused": {
+    //   opacity: 1
+    // },
+    // "&:focus": {
     //   opacity: 1
     // }
   }

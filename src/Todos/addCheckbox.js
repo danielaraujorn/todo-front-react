@@ -26,7 +26,8 @@ class AddCheckbox extends Component {
       <todosContext.Consumer>
         {({ postCheck }) => (
           <form
-            autoComplete={true}
+            style={{ marginTop: 5 }}
+            autoComplete="true"
             onSubmit={e => {
               e && e.preventDefault();
               if (title.length > 0) {
