@@ -56,7 +56,7 @@ class Todos extends Component {
       }
     });
   };
-  checkFunction = data => {
+  postCheck = data => {
     request.post(checkboxRoute, data).then(response => {
       if (response.status === 200) {
         const todosCopia = [...this.state.todos];
@@ -108,7 +108,7 @@ class Todos extends Component {
         <todosContext.Provider
           value={{
             todos: todos,
-            checkFunction: this.checkFunction,
+            postCheck: this.postCheck,
             putCheck: this.putCheck,
             deleteTodo: this.deleteTodo,
             postTodo: this.postTodo,
@@ -117,18 +117,19 @@ class Todos extends Component {
         >
           <searchTextContext.Consumer>
             {({ searchText }) =>
-              todos
-                .sort((a, b) =>
-                  stringSimilarity.compareTwoStrings(a.title, searchText) <
-                  stringSimilarity.compareTwoStrings(b.title, searchText)
-                    ? 1
-                    : -1
-                )
-                .map(todo => (
-                  <Grid key={todo.id} item xs={12}>
-                    <Todo {...todo} />
-                  </Grid>
-                ))
+              (searchText.length > 0
+                ? todos.sort((a, b) =>
+                    stringSimilarity.compareTwoStrings(a.title, searchText) <
+                    stringSimilarity.compareTwoStrings(b.title, searchText)
+                      ? 1
+                      : -1
+                  )
+                : todos
+              ).map(todo => (
+                <Grid key={todo.id} item xs={12}>
+                  <Todo {...todo} />
+                </Grid>
+              ))
             }
           </searchTextContext.Consumer>
           <Grid item xs={12}>
