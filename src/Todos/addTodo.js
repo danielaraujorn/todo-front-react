@@ -27,6 +27,7 @@ class AddCheckbox extends Component {
         <todosContext.Consumer>
           {({ postTodo }) => (
             <form
+              autoComplete="true"
               style={{ padding: 10 }}
               onSubmit={e => {
                 e && e.preventDefault();
@@ -39,6 +40,7 @@ class AddCheckbox extends Component {
             >
               <div>
                 <TextField
+                  name="todoTitle"
                   id="outlined-name"
                   label="Adicionar Lista"
                   className={classes.textfield}

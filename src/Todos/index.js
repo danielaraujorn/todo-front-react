@@ -11,8 +11,9 @@ import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import globalClasses from "./styles";
-import { todosContext } from "../contexts";
+import { todosContext, searchTextContext } from "../contexts";
 import AddTodo from "./addTodo";
+import stringSimilarity from "string-similarity";
 // import Card from "@material-ui/core/Card";
 // import TextField from "@material-ui/core/TextField";
 // import CardContent from "@material-ui/core/CardContent";
@@ -114,34 +115,22 @@ class Todos extends Component {
             putTodo: this.putTodo
           }}
         >
-          {todos.map(todo => (
-            <Grid key={todo.id} item xs={12}>
-              <Todo {...todo} />{" "}
-              {/* <Card className={classes.card}>
-              <CardContent className={classes.cardContent}>
-                <TextField
-                  className={classes.input}
-                  placeholder="título"
-                  fullWidth
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="Toggle password visibility"
-                          // onClick={this.handleClickShowPassword}
-                        >
-                          <Visibility />
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }}
-                  // value={this.state.email}
-                  // onChange={this.handleChange("email")}
-                />
-              </CardContent>
-            </Card> */}
-            </Grid>
-          ))}
+          <searchTextContext.Consumer>
+            {({ searchText }) =>
+              todos
+                .sort((a, b) =>
+                  stringSimilarity.compareTwoStrings(a.title, searchText) <
+                  stringSimilarity.compareTwoStrings(b.title, searchText)
+                    ? 1
+                    : -1
+                )
+                .map(todo => (
+                  <Grid key={todo.id} item xs={12}>
+                    <Todo {...todo} />
+                  </Grid>
+                ))
+            }
+          </searchTextContext.Consumer>
           <Grid item xs={12}>
             <AddTodo />
           </Grid>

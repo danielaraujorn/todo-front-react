@@ -12,6 +12,7 @@ import { withStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { deleteTokenCookie } from "./utils";
+import { searchTextContext } from "./contexts";
 const styles = theme => ({
   root: {
     width: "100%"
@@ -116,13 +117,19 @@ class PrimarySearchAppBar extends React.Component {
               <div className={classes.searchIcon}>
                 <SearchIcon />
               </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput
-                }}
-              />
+              <searchTextContext.Consumer>
+                {({ searchText, setSearchText }) => (
+                  <InputBase
+                    onChange={event => setSearchText(event.target.value)}
+                    value={searchText}
+                    placeholder="Procurar…"
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput
+                    }}
+                  />
+                )}
+              </searchTextContext.Consumer>
             </div>
             <IconButton
               aria-owns={isMenuOpen ? "material-appbar" : undefined}

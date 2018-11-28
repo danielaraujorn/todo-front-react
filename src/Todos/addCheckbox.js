@@ -38,7 +38,7 @@ class AddCheckbox extends Component {
             }}
           >
             <TextField
-              name="todoTitle"
+              name="checkboxTitle"
               id="outlined-name"
               label="Adicionar item"
               className={classes.textfield}
