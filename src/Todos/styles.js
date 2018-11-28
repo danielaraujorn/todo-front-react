@@ -62,7 +62,11 @@ export default theme => ({
   },
   textfield: { margin: 0, width: "100%" },
   paperAddTodo: {
-    // opacity: 0.4,
+    opacity: 0.8,
+    transitionDuration: 300,
+    "&:hover": {
+      opacity: 1
+    }
     // "&$cssFocused": {
     //   opacity: 1
     // },

@@ -4,7 +4,6 @@ import { request } from "../utils";
 import {
   getMyTodosRoute,
   checkboxRoute,
-  updateCheck,
   todosRoute,
   createTodo
 } from "../config";
@@ -56,7 +55,7 @@ class Todos extends Component {
       }
     });
   };
-  postCheck = data => {
+  checkFunction = data => {
     request.post(checkboxRoute, data).then(response => {
       if (response.status === 200) {
         const todosCopia = [...this.state.todos];
@@ -71,22 +70,22 @@ class Todos extends Component {
     });
   };
   putCheck = data => {
-    request.put(updateCheck, data).then(response => {
+    request.put(checkboxRoute, data).then(response => {
       if (response.status === 200) {
         let todosCopia = [...this.state.todos];
         const indexTodo = todosCopia.findIndex(
-          ({ id }) => id === response.data.checkbox.todoId
+          ({ id }) => id === response.data.todoId
         );
-        console.log(response, indexTodo);
         const indexCheckbox =
-          indexTodo > 0 &&
+          indexTodo >= 0 &&
           todosCopia[indexTodo].checkboxes.findIndex(
-            ({ id }) => id === response.data.checkbox.id
+            ({ id }) => id === response.data.id
           );
         todosCopia[indexTodo] !== undefined &&
           todosCopia[indexTodo].checkboxes !== undefined &&
-          (todosCopia[indexTodo].checkboxes[indexCheckbox] =
-            response.data.checkbox);
+          (todosCopia[indexTodo].checkboxes[indexCheckbox] = {
+            ...response.data
+          });
         this.setState({ todos: todosCopia });
       }
     });
@@ -108,7 +107,7 @@ class Todos extends Component {
         <todosContext.Provider
           value={{
             todos: todos,
-            postCheck: this.postCheck,
+            checkFunction: this.checkFunction,
             putCheck: this.putCheck,
             deleteTodo: this.deleteTodo,
             postTodo: this.postTodo,

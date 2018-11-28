@@ -32,6 +32,11 @@ class Todo extends React.Component {
     removeMode: false,
     title: this.props.title
   };
+  componentWillReceiveProps(np) {
+    if (np.title !== this.state.title) {
+      this.setState({ title: np.title });
+    }
+  }
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
   };
@@ -46,9 +51,6 @@ class Todo extends React.Component {
 
   handleCloseConfig = () => {
     this.setState({ openConfig: null });
-  };
-  afterEdit = () => {
-    this.setState({ editMode: false });
   };
   closeRemoveMode = () => {
     this.setState({ removeMode: false });
@@ -98,7 +100,7 @@ class Todo extends React.Component {
                     onSubmit={e => {
                       e.preventDefault();
                       putTodo({ id, title, userId });
-                      this.afterEdit();
+                      this.setState({ editMode: false });
                     }}
                   >
                     <TextField
@@ -110,7 +112,15 @@ class Todo extends React.Component {
                     />
                   </form>
                   <div className={classes.todoButtons}>
-                    <IconButton aria-label="cancelar" onClick={this.afterEdit}>
+                    <IconButton
+                      aria-label="cancelar"
+                      onClick={() =>
+                        this.setState({
+                          editMode: false,
+                          title: this.props.title
+                        })
+                      }
+                    >
                       <CancelIcon />
                     </IconButton>
                     <IconButton
@@ -118,7 +128,7 @@ class Todo extends React.Component {
                       aria-label="salvar"
                       onClick={() => {
                         putTodo({ id, title, userId });
-                        this.afterEdit();
+                        this.setState({ editMode: false });
                       }}
                     >
                       <SaveIcon />
@@ -133,7 +143,7 @@ class Todo extends React.Component {
                 onClick={this.handleExpandClick}
                 className={classes.todoTitle}
               >
-                {this.props.title}
+                {title}
               </Typography>
               <div className={classes.todoButtons}>
                 <IconButton
@@ -172,8 +182,7 @@ class Todo extends React.Component {
             >
               <MenuItem
                 onClick={() => {
-                  this.handleCloseConfig();
-                  this.setState({ editMode: true });
+                  this.setState({ openConfig: null, editMode: true });
                 }}
               >
                 Editar
@@ -191,7 +200,7 @@ class Todo extends React.Component {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent className={classes.checks}>
             {this.props.checkboxes.map(item => (
-              <Checkbox key={item.id} {...item} />
+              <Checkbox key={item.id} todoId={id} {...item} />
             ))}
             <AddCheckbox todoId={id} />
           </CardContent>
